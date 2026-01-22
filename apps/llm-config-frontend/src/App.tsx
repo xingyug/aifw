@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { LLMConfigPanel, MaskConfigPanel, TextEditor, LLMResponsePanel } from './components'
 import { useLocalStorage } from './hooks/useLocalStorage'
 import { configMask, callLLM, restoreText } from './api/client'

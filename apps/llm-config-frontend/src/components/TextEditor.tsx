@@ -57,7 +57,7 @@ export const TextEditor: React.FC<TextEditorProps> = ({
     performMasking(debouncedInput)
   }, [debouncedInput, performMasking])
 
-  const highlightDifferences = (original: string, masked: string): React.ReactNode => {
+  const highlightDifferences = (_original: string, masked: string): React.ReactNode => {
     // Simple highlighting: find PII placeholders like __PII_*__
     const piiPattern = /__PII_[A-Z_]+_\d+__/g
     const parts: React.ReactNode[] = []
