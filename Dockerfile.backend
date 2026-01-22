@@ -1,0 +1,30 @@
+FROM python:3.11-slim
+
+ENV PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1 \
+    AIFW_WORK_DIR=/data/aifw
+
+WORKDIR /opt/aifw
+
+COPY py-origin/services/requirements.txt /opt/aifw/services/requirements.txt
+COPY py-origin/cli/requirements.txt /opt/aifw/cli/requirements.txt
+
+RUN pip install --no-cache-dir -r /opt/aifw/services/requirements.txt && \
+    pip install --no-cache-dir -r /opt/aifw/cli/requirements.txt && \
+    python -m spacy download en_core_web_sm && \
+    python -m spacy download zh_core_web_sm
+
+COPY py-origin/cli/*.py /opt/aifw/cli/
+COPY py-origin/aifw/*.py /opt/aifw/aifw/
+COPY py-origin/services/app/*.py /opt/aifw/services/app/
+COPY py-origin/services/app/*.json /opt/aifw/services/app/
+COPY py-origin/services/fake_llm/*.py /opt/aifw/services/fake_llm/
+COPY py-origin/assets/*.yaml py-origin/assets/*.json /opt/aifw/assets/
+
+RUN mkdir -p ${AIFW_WORK_DIR} /var/log/aifw
+
+ENV PYTHONPATH=/opt/aifw
+
+EXPOSE 8844
+
+CMD ["python", "-m", "uvicorn", "services.app.main:app", "--host", "0.0.0.0", "--port", "8844"]
